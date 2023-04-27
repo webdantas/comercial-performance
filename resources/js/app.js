@@ -1,9 +1,17 @@
 import './bootstrap';
 
-import Alpine from 'alpinejs';
-import focus from '@alpinejs/focus';
-window.Alpine = Alpine;
+import { createApp } from 'vue';
 
-Alpine.plugin(focus);
+import CaoUsuariosIndex from './components/CaoUsuariosIndex.vue';
+import CaoUsuarioCreate from './components/CaoUsuarioCreate.vue';
+import CaoUsuarioShow from './components/CaoUsuarioShow.vue';
+import CaoUsuarioEdit from './components/CaoUsuarioEdit.vue';
 
-Alpine.start();
+const app = createApp({});
+
+app.component('cao-usuarios-index', CaoUsuariosIndex);
+app.component('cao-usuario-create', CaoUsuarioCreate);
+app.component('cao-usuario-show', CaoUsuarioShow);
+app.component('cao-usuario-edit', CaoUsuarioEdit);
+
+app.mount('#app');
