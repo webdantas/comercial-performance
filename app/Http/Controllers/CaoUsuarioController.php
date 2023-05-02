@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Repositories\CaoUsuarioRepository;
 use App\Http\Requests\CaoUsuarioRequest;
 use App\Models\CaoUsuario;
+use Illuminate\Http\Request;
+
 
 class CaoUsuarioController extends Controller
 {
@@ -16,9 +19,9 @@ class CaoUsuarioController extends Controller
 
     public function index()
     {
-        $cao_usuarios = $this->repository->getAll();
+        $cao_usuarios = $this->repository->getAllWithPermissaoSistema()
+            ->load(['caoOs.caoFaturas']);
         return view('cao_usuarios.index', compact('cao_usuarios'));
-        // return response()->json($cao_usuarios);
     }
 
     public function create()
@@ -47,14 +50,14 @@ class CaoUsuarioController extends Controller
     public function update(CaoUsuarioRequest $request, CaoUsuario $cao_usuario)
     {
         $data = $request->validated();
-        $this->repository->update($cao_usuario, $data);
+        $this->repository->update($cao_usuario->id, $data);
 
         return redirect()->route('cao_usuarios.index')->with('success', 'CaoUsuario updated successfully.');
     }
 
     public function destroy(CaoUsuario $cao_usuario)
     {
-        $this->repository->delete($cao_usuario);
+        $this->repository->delete($cao_usuario->id);
         return redirect()->route('cao_usuarios.index')->with('success', 'CaoUsuario deleted successfully.');
     }
 }

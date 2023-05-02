@@ -42,4 +42,20 @@ class CaoUsuario extends Model
         'uf_cidade',
         'dt_expedicao'
     ];
+
+    public function permissaoSistema()
+    {
+        return $this->hasMany(PermissaoSistema::class, 'co_usuario', 'co_usuario');
+    }
+
+    public function caoOs()
+    {
+        return $this->hasMany(CaoOs::class, 'co_usuario', 'co_usuario');
+    }
+
+    public function caoSalario()
+    {
+        return $this->hasOne(CaoSalario::class, 'co_usuario', 'co_usuario');
+    }
+
 }

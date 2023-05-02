@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('cao_usuarios', CaoUsuarioController::class);
+Route::get('/usuarios', [CaoUsuarioController::class, 'getAllWithPermissaoSistema']);

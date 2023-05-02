@@ -5,3 +5,11 @@
 [x-cloak] {
     display: none;
 }
+
+select option {
+    color: black;
+}
+
+table td, tr {
+    color: white;
+}
