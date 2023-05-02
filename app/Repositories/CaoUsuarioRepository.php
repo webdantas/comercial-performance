@@ -23,7 +23,7 @@ class CaoUsuarioRepository
         return CaoUsuario::join('cao_salario', 'cao_usuario.co_usuario', '=', 'cao_salario.co_usuario')
             ->join('cao_os', 'cao_usuario.co_usuario', '=', 'cao_os.co_usuario')
             ->join('cao_fatura', 'cao_os.co_os', '=', 'cao_fatura.co_os')
-            ->whereHas('permissaoSistema', function ($query) {
+            ->whereHas('permissaoSistemas', function ($query) {
                 $query->where('co_sistema', 1)
                     ->whereIn('co_tipo_usuario', [0, 1, 2])
                     ->where('in_ativo', 'S');

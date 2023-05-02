@@ -54,7 +54,6 @@
       Limpar filtros
     </button>
 
-
   </div>
 </template>
 
@@ -152,6 +151,7 @@ export default {
     salarioFormat(value) {
       return value ? value.brut_salario : 'Não informado';
     }
-  }
+  },
+
 }
 </script>

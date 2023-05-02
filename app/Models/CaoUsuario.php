@@ -43,7 +43,7 @@ class CaoUsuario extends Model
         'dt_expedicao'
     ];
 
-    public function permissaoSistema()
+    public function permissaoSistemas()
     {
         return $this->hasMany(PermissaoSistema::class, 'co_usuario', 'co_usuario');
     }
@@ -56,6 +56,16 @@ class CaoUsuario extends Model
     public function caoSalario()
     {
         return $this->hasOne(CaoSalario::class, 'co_usuario', 'co_usuario');
+    }
+
+    public function getCustoFixoAttribute()
+    {
+        $caoSalario = $this->caoSalario;
+        if ($caoSalario) {
+            return $caoSalario->brut_salario;
+        } else {
+            return 'Não informado';
+        }
     }
 
 }

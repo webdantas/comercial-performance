@@ -10,8 +10,9 @@ class PermissaoSistema extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
-    public function caoUsuario()
-    {
-        return $this->belongsTo(CaoUsuario::class, 'co_usuario', 'co_usuario');
-    }
+public function caoUsuario()
+{
+    return $this->belongsTo(CaoUsuario::class);
+}
+
 }
