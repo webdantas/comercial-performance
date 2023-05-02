@@ -20,9 +20,12 @@ class CaoUsuarioController extends Controller
     public function index()
     {
         $cao_usuarios = $this->repository->getAllWithPermissaoSistema()
-            ->load(['caoOs.caoFaturas']);
+            ->with(['caoOs.caoFaturas'])
+            ->get();
+
         return view('cao_usuarios.index', compact('cao_usuarios'));
     }
+
 
     public function create()
     {

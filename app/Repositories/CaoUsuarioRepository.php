@@ -20,22 +20,28 @@ class CaoUsuarioRepository
 
     public function getAllWithPermissaoSistema()
     {
-        return CaoUsuario::whereHas('permissaoSistema', function ($query) {
-            $query->where('co_sistema', 1)
-                ->whereIn('co_tipo_usuario', [0, 1, 2])
-                ->where('in_ativo', 'S');
-        })
-        ->whereHas('caoOs.caoFaturas') // Apenas usuários com ordens de serviço e faturas associadas
-        ->with(['caoOs' => function ($query) {
-            $query->with(['caoFaturas' => function ($query) {
-                $query->select(['co_os', 'co_fatura', 'valor', 'total_imp_inc']);
-            }]);
-        }])
-        ->get();
+        return CaoUsuario::join('cao_salario', 'cao_usuario.co_usuario', '=', 'cao_salario.co_usuario')
+            ->join('cao_os', 'cao_usuario.co_usuario', '=', 'cao_os.co_usuario')
+            ->join('cao_fatura', 'cao_os.co_os', '=', 'cao_fatura.co_os')
+            ->whereHas('permissaoSistema', function ($query) {
+                $query->where('co_sistema', 1)
+                    ->whereIn('co_tipo_usuario', [0, 1, 2])
+                    ->where('in_ativo', 'S');
+            })
+            ->with(['caoOs' => function ($query) {
+                $query->with(['caoFaturas' => function ($query) {
+                    $query->select(['co_os', 'co_fatura', 'valor', 'total_imp_inc', 'comissao_cn']);
+                }]);
+            }])
+            ->select([
+                'cao_usuario.*',
+                'cao_salario.brut_salario',
+                \DB::raw('SUM(cao_fatura.valor * cao_fatura.total_imp_inc * cao_fatura.comissao_cn / 10000) AS comissao')
+            ])
+            ->groupBy('cao_usuario.co_usuario');
     }
 
-
-    public function getAllWithPermissaoSistemaAndComissao($ano, $mes)
+    public function getAllWithPermissaoSistemaAndComissao()
     {
         return CaoUsuario::join('cao_salario', 'cao_usuario.co_usuario', '=', 'cao_salario.co_usuario')
             ->join('cao_os', 'cao_usuario.co_usuario', '=', 'cao_os.co_usuario')
@@ -45,9 +51,6 @@ class CaoUsuarioRepository
                     ->whereIn('co_tipo_usuario', [0, 1, 2])
                     ->where('in_ativo', 'S');
             })
-            ->whereYear('data_emissao', $ano)
-            ->whereMonth('data_emissao', $mes)
-            ->where('cao_salario.dt_alteracao', '>=', '2027-09-01') // Adicionado
             ->with(['caoOs' => function ($query) {
                 $query->with(['caoFaturas' => function ($query) {
                     $query->select(['co_os', 'co_fatura', 'valor', 'total_imp_inc', 'comissao_cn']);
@@ -57,6 +60,10 @@ class CaoUsuarioRepository
             ->groupBy('cao_usuario.co_usuario')
             ->get();
     }
+
+
+
+
 
     public function getById($id)
     {

@@ -37,11 +37,8 @@
         <tr v-for="user in users" :key="user.co_usuario">
           <td class="border-b p-2">{{ user.no_usuario }}</td>
           <td class="border-b p-2">{{ getReceitaLiquida(user) }}</td>
-
-          <!-- Custo Fixo -->
-          <td class="border-b p-2">{{ '' }}</td>
-          <!-- Comissão -->
-          <td class="border-b p-2">{{ '' }}</td>
+          <td class="border-b p-2">{{ user.cao_salario && user.cao_salario.brut_salario ? user.cao_salario.brut_salario : 'Não informado' }}</td>
+          <td class="border-b p-2">{{ user.comissao }}</td>
           <!-- Lucro do mês -->
           <td class="border-b p-2">{{ '' }}</td>
           <td class="border-b p-2">
@@ -135,9 +132,10 @@ export default {
     },
 
     clearFilters() {
-      this.selectedMonth = '';
-      this.selectedYear = '';
-      this.selectedUsers = [];
+      this.selectedMonth = null;
+      this.selectedYear = null;
+      this.filteredUsers = null;
+      this.users = this.caoUsuarios;
     },
   },
 
@@ -149,5 +147,11 @@ export default {
       this.availableYears.push(i.toString());
     }
   },
+
+  filters: {
+    salarioFormat(value) {
+      return value ? value.brut_salario : 'Não informado';
+    }
+  }
 }
 </script>
